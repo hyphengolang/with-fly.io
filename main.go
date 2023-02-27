@@ -12,7 +12,14 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, Fly, we have staging!\n"))
+		// read query param for name
+		name := r.URL.Query().Get("name")
+		if name == "" {
+			name = "World"
+		}
+
+		// write response
+		w.Write([]byte("Hello, " + name + "!\n"))
 	})
 
 	http.ListenAndServe(":"+port, nil)
