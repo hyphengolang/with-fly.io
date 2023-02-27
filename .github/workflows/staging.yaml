@@ -13,6 +13,8 @@ jobs:
   staging_app:
     name: Staging App
     runs-on: ubuntu-latest
+    permissions: write-all # ⚠️ I will find out what write:org means
+
     concurrency:
       group: pr-${{ github.event.number }}
     environment:
@@ -20,7 +22,13 @@ jobs:
       url: ${{ steps.deploy.outputs.url }}
     steps:
       - uses: actions/checkout@v3
-      - name: Deploy
+      - name: Deploy App
         id: deploy
         uses: superfly/fly-pr-review-apps@1.0.0
-    
+      - name: Clean up GitHub environment
+        uses: strumwolf/delete-deployment-environment@v2
+        if: ${{ github.event.action == 'closed' }}
+        with:
+          # ⚠️ The provided token needs permission for admin write:org
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: pr-${{ github.event.number }}
