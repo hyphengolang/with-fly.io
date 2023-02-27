@@ -12,7 +12,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, Deployed application!\n"))
+		w.Write([]byte("Hello, Fly, we have staging!\n"))
 	})
 
 	http.ListenAndServe(":"+port, nil)
